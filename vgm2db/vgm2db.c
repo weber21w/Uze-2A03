@@ -68,12 +68,30 @@ int FinalizeFile(){//hack, use the directory and the temporary file to create th
 	if(dbft == NULL)
 		return -1;
 
+	vgm_cursor_pos = 0;
 	int i;
-	for(i=0;i<512;i++)
+	for(i=0;i<512;i++){
 		fputc(directory_data[i], dbf);
+		vgm_cursor_pos++;
+	}
+	//fake image data for now...
+	for(i=0;i<8*5*64;i++){
+		fputc(0, dbf);
+		vgm_cursor_pos++;
+	}
 
-	while(!feof(dbft))
+	if(vgm_cursor_pos%512)//shouldn't happen
+		printf("WARNING: not sector aligned for final output\n");
+
+	while(vgm_cursor_pos%512){//pad out to sector boundary
+		fputc(0, dbft);
+		vgm_cursor_pos++;
+	}
+
+	while(!feof(dbft)){
 		fputc(fgetc(dbft), dbf);
+		vgm_cursor_pos++;
+	}
 
 	fclose(dbft);
 	fclose(dbf);
