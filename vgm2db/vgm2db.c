@@ -33,8 +33,8 @@ int AppendFile(char *fname){
 	if(fi == NULL)
 		return -1;
 
-	directory_data[directory_index+0] = ((vgm_cursor_pos/512)&0xFF00)>>8;//records start of .vgm file data(sector offset)
-	directory_data[directory_index+1] = ((vgm_cursor_pos/512)&0x00FF)>>0;
+	directory_data[(directory_index*2)+0] = ((vgm_cursor_pos/512)&0xFF00)>>8;//records start of .vgm file data(sector offset)
+	directory_data[(directory_index*2)+1] = ((vgm_cursor_pos/512)&0x00FF)>>0;
 
 	directory_index++;
 
